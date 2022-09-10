@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParameterizedTests extends Operations {
     Numbers numbers = new Numbers();
@@ -179,5 +180,14 @@ public class ParameterizedTests extends Operations {
         numbers.setNum2(num2);
         int actualValue = multiplication(numbers);
         assertEquals(res, actualValue);
+    }
+
+    @ParameterizedTest
+    @DisplayName("Тестирование исключения")
+    @CsvFileSource(resources = "/zeroTest.csv", numLinesToSkip = 1)
+    void divisionTest(int num1, int num2) {
+        numbers.setNum1(num1);
+        numbers.setNum2(num2);
+        assertThrows(ArithmeticException.class, () -> division(numbers));
     }
 }
