@@ -1,9 +1,11 @@
 import com.example.labs1.Numbers;
 import com.example.labs1.Operations;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ParameterizedTests extends Operations {
     Numbers numbers = new Numbers();
@@ -151,7 +153,7 @@ public class ParameterizedTests extends Operations {
     void minusForDecimal(int num1, int num2, int res) {
         numbers.setNum1(num1);
         numbers.setNum2(num2);
-        int actualValue = plus(numbers);
+        int actualValue = minus(numbers);
         assertEquals(res, actualValue);
     }
 
