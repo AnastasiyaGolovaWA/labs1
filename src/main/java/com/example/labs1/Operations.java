@@ -42,43 +42,24 @@ public class Operations {
         return numbers;
     }
 
-    public static int calculate(Numbers numbers, Operation operation) {
+    public static int calculate(Numbers numbers, char op, int system) {
         int result = 0;
-
-        switch (operation) {
-            case ADD:
-                result = Calculator.plus(numbers);
+        switch (op) {
+            case '+':
+                result = plus(convert(numbers.getNum1(), numbers.getNum2(), system));
                 break;
-            case SUBTRACT:
-                result = Calculator.minus(numbers);
+            case '-':
+                result = minus(convert(numbers.getNum1(), numbers.getNum2(), system));
                 break;
-            case MULTIPLY:
-                result = Calculator.multiplication(numbers);
+            case '*':
+                result = multiplication(convert(numbers.getNum1(), numbers.getNum2(), system));
                 break;
-            case DIVIDE:
-                result = Calculator.division(numbers);
+            case '/':
+                result = division(convert(numbers.getNum1(), numbers.getNum2(), system));
                 break;
         }
-
+        System.out.print("\nРезультат:\n");
+        System.out.printf(numbers.getNum1() + " " + op + " " + numbers.getNum2() + " = " + Integer.toString(result, system));
         return result;
-    }
-
-    public enum Operation {
-
-        ADD("+"),
-        SUBTRACT("-"),
-        MULTIPLY("*"),
-        DIVIDE("/");
-
-        public final String SYMBOL;
-
-        Operation(String symbol) {
-            this.SYMBOL = symbol;
-        }
-
-        @Override
-        public String toString() {
-            return SYMBOL;
-        }
     }
 }

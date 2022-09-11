@@ -1,3 +1,4 @@
+import com.example.labs1.Numbers;
 import com.example.labs1.Operations;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -27,9 +28,6 @@ public class DynamicTests extends Operations {
             int expectedSum;
             int system;
 
-            int expectedValue;
-
-
             while ((line = in.readLine()) != null) {
                 cells = line.split(",");
                 num1 = Integer.parseInt(cells[0]);
@@ -38,18 +36,22 @@ public class DynamicTests extends Operations {
                 expectedSum = Integer.parseInt(cells[2]);
                 system = Integer.parseInt(cells[3]);
 
-                tests.add(buildTest(num1, num2, Operations.Operation.ADD, expectedSum, system));
+                tests.add(buildTest(num1, num2, '+', expectedSum, system));
+                tests.add(buildTest(num1, num2, '-', expectedSum, system));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private DynamicTest buildTest(final int num1, final int num2, final Operation operator, final int expected, int system) {
-        String displayName = String.format("%s %s %s = %s", num1, operator.SYMBOL, num2, expected);
+    private DynamicTest buildTest(final int num1, final int num2, final char operator, final int expected, int system) {
+        String displayName = String.format("%s %s %s = %s", num1, operator, num2, expected);
+        Numbers numbers = new Numbers();
+        numbers.setNum1(num1);
+        numbers.setNum2(num2);
 
         return dynamicTest(displayName, () -> {
-            int res = Operations.calculate(convert(num1, num2, system), operator);
+            int res = Operations.calculate(numbers, operator, system);
             assertEquals(expected, resFormat(res, system));
         });
     }
@@ -58,7 +60,7 @@ public class DynamicTests extends Operations {
         return Integer.parseInt(Integer.toString(res, system));
     }
 
-    @DisplayName("динамический тест из всех *.csv в текущей папке")
+    @DisplayName("Общий динамический тест")
     @TestFactory
     Collection<DynamicTest> runDynamicTest() {
         Collection<DynamicTest> tests = new ArrayList<>();
