@@ -26,6 +26,7 @@ public class DynamicTests extends Operations {
             int num1;
             int num2;
             int expectedSum;
+            int expectedMinus;
             int system;
 
             while ((line = in.readLine()) != null) {
@@ -34,10 +35,11 @@ public class DynamicTests extends Operations {
                 num2 = Integer.parseInt(cells[1]);
 
                 expectedSum = Integer.parseInt(cells[2]);
-                system = Integer.parseInt(cells[3]);
+                expectedMinus = Integer.parseInt(cells[3]);
+                system = Integer.parseInt(cells[4]);
 
                 tests.add(buildTest(num1, num2, '+', expectedSum, system));
-                tests.add(buildTest(num1, num2, '-', expectedSum, system));
+                tests.add(buildTest(num1, num2, '-', expectedMinus, system));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,7 +47,7 @@ public class DynamicTests extends Operations {
     }
 
     private DynamicTest buildTest(final int num1, final int num2, final char operator, final int expected, int system) {
-        String displayName = String.format("%s %s %s = %s", num1, operator, num2, expected);
+        String displayName = String.format("%s %s %s = %s, Система счисления: %s", num1, operator, num2, expected, system);
         Numbers numbers = new Numbers();
         numbers.setNum1(num1);
         numbers.setNum2(num2);
@@ -60,7 +62,7 @@ public class DynamicTests extends Operations {
         return Integer.parseInt(Integer.toString(res, system));
     }
 
-    @DisplayName("Общий динамический тест")
+    @DisplayName("Динамический тест")
     @TestFactory
     Collection<DynamicTest> runDynamicTest() {
         Collection<DynamicTest> tests = new ArrayList<>();
