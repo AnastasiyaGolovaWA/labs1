@@ -1,9 +1,16 @@
 import com.example.labs1.Numbers;
 import com.example.labs1.Operations;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,13 +39,60 @@ public class DynamicTests extends Operations {
         return numbers;
     }
 
+    private void buildTestsFromFile(Collection<DynamicTest> tests, String fileName) {
+        try (BufferedReader in = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            in.readLine();
+
+            String[] cells;
+            int num1;
+            int num2;
+            int expectedSum;
+            int system;
+
+            int expectedValue;
+
+
+            while ((line = in.readLine()) != null) {
+                cells = line.split(",");
+                num1 = Integer.parseInt(cells[0]);
+                num2 = Integer.parseInt(cells[1]);
+
+                expectedSum = Integer.parseInt(cells[2]);
+                system = Integer.parseInt(cells[3]);
+
+                tests.add(buildTest(num1, num2, Operations.Operation.ADD, expectedSum));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private DynamicTest buildTest(final int num1, final int num2, final Operation operator, final int expected) {
+        String displayName = String.format("%s %s %s = %s", num1, operator.SYMBOL, num2, expected);
+
+        return dynamicTest(displayName, () -> {
+            int res = Operations.calculate(convert(num1, num2, 10), operator);
+            assertEquals(expected, res);
+        });
+    }
+
+    @DisplayName("динамический тест из всех *.csv в текущей папке")
     @TestFactory
-    Collection<DynamicTest> dynamicTestsForPlus() {
-        return Arrays.asList(
-                dynamicTest("Сумма десятичных чисел", () -> assertEquals(1, division(convert(1001, 111, 2)))),
-                dynamicTest("Сумма двоичных чисел", () -> assertEquals(1, division(convert(1001, 111, 2)))),
-                dynamicTest("Сумма восьмеричных чисел", () -> assertEquals(1, division(convert(1001, 111, 2)))),
-                dynamicTest("Сумма шестнадцатеричных чисел", () -> assertEquals(1, division(convert(1001, 111, 2))))
-        );
+    Collection<DynamicTest> runDynamicTest() {
+        Collection<DynamicTest> tests = new ArrayList<>();
+
+        Path currRelativePath = Paths.get("");
+        String currFolder = currRelativePath.toAbsolutePath().toString();
+        File folder = new File(currFolder);
+        String[] folderContent = folder.list();
+
+        for (String file : folderContent) {
+            if (file.endsWith(".csv")) {
+                buildTestsFromFile(tests, file);
+            }
+        }
+
+        return tests;
     }
 }
