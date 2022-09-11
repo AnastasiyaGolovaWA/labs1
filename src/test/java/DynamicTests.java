@@ -61,20 +61,24 @@ public class DynamicTests extends Operations {
                 expectedSum = Integer.parseInt(cells[2]);
                 system = Integer.parseInt(cells[3]);
 
-                tests.add(buildTest(num1, num2, Operations.Operation.ADD, expectedSum));
+                tests.add(buildTest(num1, num2, Operations.Operation.ADD, expectedSum, system));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private DynamicTest buildTest(final int num1, final int num2, final Operation operator, final int expected) {
+    private DynamicTest buildTest(final int num1, final int num2, final Operation operator, final int expected, int system) {
         String displayName = String.format("%s %s %s = %s", num1, operator.SYMBOL, num2, expected);
 
         return dynamicTest(displayName, () -> {
-            int res = Operations.calculate(convert(num1, num2, 10), operator);
-            assertEquals(expected, res);
+            int res = Operations.calculate(convert(num1, num2, system), operator);
+            assertEquals(expected, resFormat(res, system));
         });
+    }
+
+    public static int resFormat(int res, int system) {
+        return Integer.parseInt(Integer.toString(res, system));
     }
 
     @DisplayName("динамический тест из всех *.csv в текущей папке")
